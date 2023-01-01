@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="h-100">
+<head>
+  <meta charset="UTF-8">
+  <title>Добавление пользователя</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" type="application/javascript"></script>
+</head>
+<body class="h-100 bg-secondary">
+
+<th:block th:insert="blocks/header.html"/>
+
+<div class="h-100 d-flex align-items-center justify-content-center">
+  <form method="post">
+    <div class="container">
+      <label class="col-3 px-1 text-white" for="surname">Фамилия: </label>
+      <input class="col-8 rounded" placeholder="Иванов" id="surname" name="surname" required="required" type="text"/>
+      <label class="col px-1 text-white" for="surname">*</label>
+    </div>
+    <div class="container">
+      <label class="col-3 px-1 text-white" for="name">Имя: </label>
+      <input class="col-8 rounded" placeholder="Иван" id="name" name="name" required="required" type="text"/>
+      <label class="col px-1 text-white" for="name">*</label>
+    </div>
+    <div class="container">
+      <label class="col-3 px-1 text-white" for="patronymic">Отчество: </label>
+      <input class="col-8 rounded" placeholder="Иванович" id="patronymic" name="patronymic" type="text"/>
+    </div>
+    <div class="container">
+      <label class="col-3 px-1 text-white" for="email">Почта: </label>
+      <input class="col-8 rounded" placeholder="example@mail.ru" id="email" name="email" required="required" type="email"/>
+      <label class="col px-1 text-white" for="email">*</label>
+    </div>
+    <div class="container">
+      <label class="col-3 px-1 text-white" for="password">Пароль: </label>
+      <input class="col-8 rounded" placeholder="qwerty123" id="password" name="password" required="required" type="password"/>
+      <label class="col px-1 text-white" for="password">*</label>
+    </div>
+    <div class="container">
+      <label class="col-3 px-1 text-white" for="access">Доступ: </label>
+      <input class="col-8 rounded" placeholder="Уровень доступа" id="access" name="access" required="required" type="tel" maxlength="1"/>
+      <label class="col px-1 text-white" for="access">*</label>
+    </div>
+    <div class="container m-3">
+      <button name="addBtn" id="addBtn" class="m-1 btn btn-success col">Добавить</button>
+      <button name="backBtn" id="backBtn" class="btn btn-dark col">Отменить</button>
+    </div>
+    <div class="container">
+      <label class="spinner-border text-white d-none" id="loading"></label>
+      <label class="bg-danger text-white d-none" id="error"></label>
+      <label class="bg-success text-white d-none" id="success">Успех</label>
+    </div>
+  </form>
+</div>
+
+<script>
+  let btn = $("#addBtn");
+  btn.click((e) => {
+    e.preventDefault();
+    $.ajax({
+      url: location.origin + "/addUser",
+      method: "POST",
+      data: {
+        surname: $("#surname").val(),
+        name: $("#name").val(),
+        patronymic: $("#patronymic").val(),
+        email: $("#email").val(),
+        password: $("#password").val(),
+        access: $("#access").val(),
+      },
+      method: "POST",
+      dataType: "json",
+      beforeSend() {
+        $("#loading").removeClass("d-none");
+        $("#error").addClass("d-none");
+        $("#success").addClass("d-none");
+      },
+      success(data) {
+        $("#loading").addClass("d-none");
+        $("#error").addClass("d-none");
+        $("#success").removeClass("d-none");
+
+        $("#surname").val("");
+        $("#name").val("");
+        $("#patronymic").val("");
+        $("#email").val("");
+        $("#password").val("");
+        $("#access").val("");
+      },
+      error(data) {
+        $("#loading").addClass("d-none");
+        $("#error").removeClass("d-none");
+        $("#success").addClass("d-none");
+        $("#error").text("Код ошибка: " + data.status + ", текст ошибки: " + data.responseJSON.error);
+      }
+
+    })
+  });
+
+  $("#backBtn").click(() => {
+    location.href = location.origin + "/";
+  });
+</script>
+</body>
+</html>

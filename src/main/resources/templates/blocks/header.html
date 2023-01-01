@@ -1,0 +1,9 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand text-white" href="/">Lairnan</a>
+        <div th:if="${session.get('user') != null}">
+            <a th:if="${session.get('access') > 1}" class="btn text-white" id="addUser" href="/addUser">Добавить</a>
+            <a class="btn text-white" id="exit" href="/exit">Выйти</a>
+        </div>
+    </div>
+</nav>
